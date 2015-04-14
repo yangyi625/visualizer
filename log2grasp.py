@@ -12,7 +12,7 @@ TRACE_INTERRUPT = False
 
 log = open('log', 'r')
 lines = log.readlines()
-
+context_switch = open('cost.txt','w')
 tasks = {}
 events = []
 mutexes = {}
@@ -34,13 +34,15 @@ for line in lines :
 		task['created'] = True
 		
 		tasks[id] = task
-		
+	
+
 	elif inst == 'switch' :
 		out_task, in_task, tick, tick_reload, out_minitick, in_minitick = args.split(' ')
 		
-		out_time = (int(tick) + (int(tick_reload) - int(out_minitick)) / int(tick_reload)) / 100 * 1000;
-		in_time  = (int(tick) + (int(tick_reload) - int(in_minitick))  / int(tick_reload)) / 100 * 1000;
-		
+		out_time = (float(tick) + (float(tick_reload) - float(out_minitick)) / float(tick_reload)) / 100 * 1000;
+		in_time  = (float(tick) + (float(tick_reload) - float(in_minitick))  / float(tick_reload)) / 100 * 1000;
+		cost_time=out_time-in_time
+		context_switch.write("cost time equal : %f ms\n" %cost_time)
 		event = {}
 		event['type'] = 'task out'
 		event['task'] = out_task
@@ -164,7 +166,7 @@ for line in lines :
 			tasks[int_num]['created'] = True if dir == 'in' else False
 
 log.close()
-
+context_switch.close()
 grasp = open('sched.grasp', 'w')
 
 for id in tasks :

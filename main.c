@@ -200,6 +200,20 @@ void serial_readwrite_task(void *pvParameters)
 		                         portMAX_DELAY));
 	}
 }
+void fortest(void *pvParameters)
+{
+	while(1)
+	{
+
+	}
+}
+void fortest2(void *pvParameters)
+{
+	while(1)
+	{
+
+	}
+}
 
 int main()
 {
@@ -219,7 +233,10 @@ int main()
 	serial_str_queue = xQueueCreate(10, sizeof(serial_str_msg));
 	vSemaphoreCreateBinary(serial_tx_wait_sem);
 	serial_rx_queue = xQueueCreate(1, sizeof(serial_ch_msg));
-
+	xTaskCreate(fortest,(signed portCHAR *)"fortest",
+		128,NULL,tskIDLE_PRIORITY+1,NULL);
+	xTaskCreate(fortest2,(signed portCHAR *)"fortest2",
+		128,NULL,tskIDLE_PRIORITY+1,NULL);
 	/* Create a task to flash the LED. */
 	xTaskCreate(led_flash_task,
 	            (signed portCHAR *) "LED Flash",
